@@ -1,6 +1,7 @@
 ---
-- name: resolve hostname via localhost entry when dns is not available
+- name: resolve hostname via /etc/hosts swhen dns is not available
   lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
+  ignore_errors: true
 
 - name: install epel release
   yum: name=epel-release
