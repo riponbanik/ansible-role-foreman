@@ -1,4 +1,5 @@
 ---
+foreman_hostname: foreman.example.com
 foreman_version: 1.16
 puppet_version: puppet5
 base_only: true 
