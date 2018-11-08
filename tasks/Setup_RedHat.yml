@@ -16,19 +16,28 @@
 
     - name: disable firewalld
       service: name=firewalld state=stopped enabled=no      
-  when: ansible_os_family == "RedHat" or ansible_os_family == "CentOS" and ansible_distribution_major_version == "7"  
+      ignore_errors: true
+  when: ansible_distribution_major_version == "7"  
 
-- name: foreman installer package
+- name: install foreman installer package
   yum: name=foreman-installer
 
-- lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
-- lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
+- name: Install Foreman
+  block:
+    - name: Install foreman
+      command: foreman-installer --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-password=password --foreman-admin-username=admin --foreman-locations-enabled=true  --foreman-organizations-enabled=true  --foreman-unattended=true --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest
+  when: !(require_puppet | bool)
 
-- name: Install foreman
-  command: foreman-installer --puppet-server=true --puppet-autosign-entries='*' --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-puppet --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-email=info@cloudnext.com --foreman-admin-first-name=admin --foreman-admin-last-name=COM --foreman-admin-password=password --foreman-admin-username=admin --foreman-initial-organization=mylab --foreman-locations-enabled=true --foreman-oauth-consumer-key="mYkEy" --foreman-oauth-consumer-secret="mYkEy" --foreman-organizations-enabled=true --foreman-puppetrun=true  --foreman-unattended=true --foreman-proxy-oauth-consumer-key="mYkEy" --foreman-proxy-oauth-consumer-secret="mYkEy" --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest --foreman-proxy-puppet=true --puppet-server-foreman=true --puppet-server-foreman-url=https://{{ansible_fqdn}}
+- name: Install Foreman with Puppet
+  block:
+    - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
+    - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
+    - name: Install foreman
+        command: foreman-installer --puppet-server=true --puppet-autosign-entries='*' --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-puppet --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-email=info@cloudnext.com --foreman-admin-first-name=admin --foreman-admin-last-name=COM --foreman-admin-password=password --foreman-admin-username=admin --foreman-initial-organization=mylab --foreman-locations-enabled=true --foreman-oauth-consumer-key="mYkEy" --foreman-oauth-consumer-secret="mYkEy" --foreman-organizations-enabled=true --foreman-puppetrun=true  --foreman-unattended=true --foreman-proxy-oauth-consumer-key="mYkEy" --foreman-proxy-oauth-consumer-secret="mYkEy" --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest --foreman-proxy-puppet=true --puppet-server-foreman=true --puppet-server-foreman-url=https://{{ansible_fqdn}}
+  when: require_puppet | bool
 
 - name: Install and Configure Puppet
-  block:
+  block:    
     - name: Install puppet modules
       command: '/opt/puppetlabs/bin/puppet module install puppetlabs-puppetdb --version 5.1.2'
       args:
