@@ -1,7 +1,13 @@
 ---
+- name: copy script to modify /etc/hosts
+  copy:
+    src: modify_hosts.py
+    dest: /tmp/modify_hosts.py
+    mode: 0755
+
 - name: resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
-  command: python modify_hosts.py "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
+  command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   
 - name: install epel release
   yum: name=epel-release
