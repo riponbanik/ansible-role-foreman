@@ -1,6 +1,5 @@
 Ansible Role to install and configure Foreman
 [![Build Status](https://travis-ci.org/riponbanik/ansible-role-foreman.svg?branch=master)](https://travis-ci.org/riponbanik/ansible-role-foreman)
-Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 
 ## Requirements
 Foreman require hostname to be fqdn. Use Ansible hostname module to change hostname to fqdn
@@ -27,6 +26,10 @@ None.
 ## License
 
 MIT / BSD
+
+
+## Refernces
+Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 
 ## Author Information
 
