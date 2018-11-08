@@ -26,7 +26,7 @@
   block:
     - name: Install foreman
       command: foreman-installer --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-password=password --foreman-admin-username=admin --foreman-locations-enabled=true  --foreman-organizations-enabled=true  --foreman-unattended=true --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest
-  when: !(require_puppet | bool)
+  when: not (require_puppet | bool)
 
 - name: Install Foreman with Puppet
   block:
