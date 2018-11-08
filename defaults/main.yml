@@ -1,3 +1,4 @@
 ---
 foreman_version: 1.16
 require_puppet: false
+base_only: true 

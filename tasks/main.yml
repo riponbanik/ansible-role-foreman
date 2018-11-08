@@ -1,4 +1,10 @@
 ---
+# Set facts
+- name: Specify base or custom install
+  set_fact:
+    base_only: false 
+  when: (require_puppet | bool)
+
 # Include variables and define needed variables.
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
