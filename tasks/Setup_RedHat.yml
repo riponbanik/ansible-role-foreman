@@ -1,0 +1,71 @@
+---
+- name: resolve hostname via localhost entry when dns is not available
+  lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
+
+- name: install epel release
+  yum: name=epel-release
+
+- name: exclude passenger from epel
+  lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"
+
+- name: configure foreman for EL7
+  block:     
+    - name: install foreman repo
+      yum: name=http://yum.theforeman.org/releases/{{foreman_version}}/el7/x86_64/foreman-release.rpm state=present
+
+    - name: disable firewalld
+      service: name=firewalld state=stopped enabled=no      
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"  
+
+- name: foreman installer package
+  yum: name=foreman-installer
+
+- lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
+- lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
+
+- name: Install foreman
+  command: foreman-installer --puppet-server=true --puppet-autosign-entries='*' --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-puppet --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-email=info@cloudnext.com --foreman-admin-first-name=admin --foreman-admin-last-name=COM --foreman-admin-password=password --foreman-admin-username=admin --foreman-initial-organization=mylab --foreman-locations-enabled=true --foreman-oauth-consumer-key="mYkEy" --foreman-oauth-consumer-secret="mYkEy" --foreman-organizations-enabled=true --foreman-puppetrun=true  --foreman-unattended=true --foreman-proxy-oauth-consumer-key="mYkEy" --foreman-proxy-oauth-consumer-secret="mYkEy" --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest --foreman-proxy-puppet=true --puppet-server-foreman=true --puppet-server-foreman-url=https://{{ansible_fqdn}}
+
+- name: Install and Configure Puppet
+  block:
+    - name: Install puppet modules
+      command: '/opt/puppetlabs/bin/puppet module install puppetlabs-puppetdb --version 5.1.2'
+      args:
+       chdir: /etc/puppetlabs/code/environments/production/modules
+       creates: /etc/puppetlabs/code/environments/production/modules/puppetdb
+
+    - name: creating Puppet Profiles PATH
+      file: path=/etc/puppetlabs/code/environments/production/modules/profiles/manifests state=directory
+
+    - name: copy profiles puppetdb manifests
+      template: src={{ item }} dest=/etc/puppetlabs/code/environments/production/modules/profiles/manifests/{{ item }}
+      with_items:
+       - mypuppetdb.pp
+
+    - name: Apply profiles Puppet
+      command: /opt/puppetlabs/bin/puppet apply profiles
+      args:
+        chdir: /etc/puppetlabs/code/environments/production/modules
+
+    - name: Selinux Allow Passange to ALL
+      seboolean: name=passenger_can_connect_all state=yes persistent=yes
+
+    - name: Run of puppet agent (Registering VM in to Foreman)
+      puppet: timeout=30
+
+    - name: Update Puppet classes in Foreman via API
+      command: 'curl -k -u "admin":"password" -H "Content-Type: application/json" -X POST https://foreman.lab.local/api/smart_proxies/1/import_puppetclasses'
+
+    - name: Assigne Puppetdb Class to Foreman
+      command: "curl -k -u 'admin':'password' -H 'Content-Type: application/json' -X POST -d '{\"puppetclass_id\": 34}' https://foreman.lab.local/api/hosts/1/puppetclass_ids"
+      ignore_errors: True
+
+    - name: Run of puppet agent (Installing Puppetdb in Foreman)
+      puppet: timeout=600
+
+    - name: run foreman with puppetdb
+      command: foreman-installer --foreman-initial-location=lab --foreman-initial-organization=mylab --puppet-server=true --puppet-autosign-entries='*' --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-puppet --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh --foreman-admin-email=info@cloudnext.com --foreman-admin-first-name=administrator --foreman-admin-last-name=default --foreman-admin-password=password --foreman-admin-username=admin --foreman-initial-organization=mylab --foreman-locations-enabled=true --foreman-oauth-consumer-key="mYkEy" --foreman-oauth-consumer-secret="mYkEy" --foreman-organizations-enabled=true --foreman-puppetrun=true  --foreman-unattended=true --foreman-proxy-oauth-consumer-key="mYkEy" --foreman-proxy-oauth-consumer-secret="mYkEy" --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest --foreman-proxy-puppet=true --puppet-server-foreman=true --puppet-server-foreman-url=https://foreman.lab.local --puppet-server-storeconfigs-backend=puppetdb --puppet-server-reports=foreman,puppetdb  --foreman-plugin-puppetdb-address='https://foreman.lab.local:8081/pdb/cmd/v1' --foreman-plugin-puppetdb-dashboard-address='http://foreman.lab.local:8080/pdb/dashboard' --enable-foreman-plugin-puppetdb
+
+    - name: Run of puppet agent (After Foreman connect to DB running agent to make sure that Postgresql DB has pg_hba rules for PuppetDB)
+      puppet: timeout=600
+  when: require_puppet | bool    
