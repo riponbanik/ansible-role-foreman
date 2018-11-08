@@ -1,4 +1,5 @@
 ---
 foreman_version: 1.16
-require_puppet: false
+puppet_version: puppet5
 base_only: true 
+install_puppet_master: false

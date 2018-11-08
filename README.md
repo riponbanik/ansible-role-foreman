@@ -8,7 +8,7 @@ Foreman require hostname to be fqdn. Use Ansible hostname module to change hostn
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
 # Install and configure puppet master and puppet db
-require_puppet: true
+install_puppet_master: true
 
 ## Dependencies
 
@@ -21,7 +21,7 @@ None.
         - vars/main.yml
       roles:
         - role: riponbanik.foreman 
-          require_puppet: false
+          install_puppet_master: false
 
 ## License
 

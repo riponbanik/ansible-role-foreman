@@ -17,6 +17,10 @@
     - name: disable firewalld
       service: name=firewalld state=stopped enabled=no      
       ignore_errors: true
+
+    - name: install puppet
+      yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/{{puppet_version}}-release-el-7.noarch.rpm state=present
+
   when: ansible_distribution_major_version == "7"  
 
 - name: install foreman installer package
@@ -34,7 +38,7 @@
     - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
     - name: Install foreman
       command: foreman-installer --puppet-server=true --puppet-autosign-entries='*' --enable-foreman --enable-foreman-cli --enable-foreman-proxy --enable-puppet --enable-foreman-plugin-ansible --enable-foreman-plugin-bootdisk --enable-foreman-plugin-default-hostgroup --enable-foreman-plugin-docker --enable-foreman-plugin-expire-hosts --enable-foreman-plugin-hooks --enable-foreman-plugin-host-extra-validator --enable-foreman-plugin-memcache --enable-foreman-plugin-remote-execution --enable-foreman-plugin-setup --enable-foreman-plugin-tasks --enable-foreman-plugin-templates --enable-foreman-proxy-plugin-dynflow --enable-foreman-proxy-plugin-remote-execution-ssh  --foreman-admin-first-name=admin --foreman-admin-password=password --foreman-admin-username=admin --foreman-locations-enabled=true --foreman-organizations-enabled=true --foreman-puppetrun=true  --foreman-unattended=true --foreman-proxy-oauth-effective-user=admin --foreman-proxy-plugin-version=latest --foreman-proxy-puppet=true --puppet-server-foreman=true --puppet-server-foreman-url="https://{{ansible_fqdn}}"
-  when: require_puppet | bool
+  when: install_puppet_master | bool
 
 - name: Install and Configure Puppet
   block:    
@@ -78,4 +82,4 @@
 
     - name: Run of puppet agent (After Foreman connect to DB running agent to make sure that Postgresql DB has pg_hba rules for PuppetDB)
       puppet: timeout=600
-  when: require_puppet | bool    
+  when: install_puppet_master | bool    

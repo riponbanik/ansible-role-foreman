@@ -3,7 +3,7 @@
 - name: Specify base or custom install
   set_fact:
     base_only: false 
-  when: (require_puppet | bool)
+  when: (install_puppet_master | bool)
 
 # Include variables and define needed variables.
 - name: Include OS-specific variables.
