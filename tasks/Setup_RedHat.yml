@@ -7,7 +7,7 @@
 
 - name: resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
-  command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
+  command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   
 - name: install epel release
   yum: name=epel-release
