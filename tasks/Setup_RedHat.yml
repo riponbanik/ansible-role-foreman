@@ -19,17 +19,17 @@
   
 - debug: var=default_hostname.stdout
 
-- name: verify facter hostname 
-  shell: /opt/puppetlabs/bin/facter fqdn
-  register: facter_hostname
-  
-- debug: var=facter_hostname.stdout
-
 - name: verify /etc/resolv.conf 
   shell: cat /etc/resolv.conf
   register: resolvconf
   
 - debug: var=resolvconf.stdout
+
+# - name: verify facter hostname 
+#   shell: /opt/puppetlabs/bin/facter fqdn
+#   register: facter_hostname
+  
+# - debug: var=facter_hostname.stdout
 
 - name: install epel release
   yum: name=epel-release
@@ -46,7 +46,7 @@
       service: name=firewalld state=stopped enabled=no      
       ignore_errors: true
 
-    - name: install puppet
+    - name: install puppet repo
       yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/{{puppet_version}}-release-el-7.noarch.rpm state=present
 
   when: ansible_distribution_major_version == "7"  
