@@ -10,12 +10,11 @@
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -l {{ansible_hostname}}
    
-
 - name: verify /etc/hosts
-  commnad: cat /etc/hosts
-  register: hosts 
+  shell: cat /etc/hosts
+  register: etchosts 
   
-- debug: var=hosts.stdout
+- debug: var=etchosts.stdout
 
 - name: install epel release
   yum: name=epel-release
