@@ -53,3 +53,7 @@ test/vagrant-spec/boxes/*.box
 
 # Openshift
 **/openshift
+
+# Kitchen 
+kitchen/.kitchen
+.kitchen

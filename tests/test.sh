@@ -66,7 +66,7 @@ fi
 # Run the container using the supplied OS.
 printf ${green}"Starting Docker container: geerlingguy/docker-$distro-ansible."${neutral}"\n"
 docker pull geerlingguy/docker-$distro-ansible:latest
-docker run --detach --volume="$PWD":/etc/ansible/roles/role_under_test:rw --hostname foreman.example.com --dns-search example.com --name $container_id $opts geerlingguy/docker-$distro-ansible:latest $init
+docker run --detach --volume="$PWD":/etc/ansible/roles/role_under_test:rw --name $container_id $opts geerlingguy/docker-$distro-ansible:latest $init
 
 printf "\n"
 

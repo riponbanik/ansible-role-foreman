@@ -1,41 +1,5 @@
 ---
-  - hosts: all
-    environment: 
-      GIT_SSL_NO_VERIFY: true
-      '[Net.ServicePointManager]::SecurityProtocol': 'tls12, tls11, tls'
-    vars:
-      key_file_path: 'c:\windows\temp\id_rsa'  
-    tasks:
-      - name: Download Git Client
-        win_get_url:
-          url: https://github.com/git-for-windows/git/releases/download/v2.19.0.windows.1/Git-2.19.0-64-bit.exe
-          dest: c:\windows\temp\Git-2.19.0-64-bit.exe  
-          force: no
-          validate_certs: no 
-        ignore_errors: yes
-        tags:
-          - git
-          - packages
-      - name: Install Git Client
-        win_package:
-          path: c:\windows\temp\Git-2.19.0-64-bit.exe
-          arguments: '/VERYSILENT /NORESTART'     
-          creates_path: 'C:\Program Files\Git\bin\git.exe'                                    
-        tags: 
-        - git
-        - packages     
-      # - name: Copy the Private Key File
-      #   win_copy:
-      #     src: files/id_rsa
-      #     dest: c:\windows\temp\id_rsa
-      - name: Clone the matlab repo
-        win_git:          
-          repo: https://RiponB:OTE5OTQ5MzE2NDY5Os5uX5q+Q3PiTWIgtelKyME4Psea@scm.tcorpad.nsw.gov.au/scm/cfi/matlab.git
-          dest: c:\temp\cfi\matlab
-          accept_hostkey: yes
-          update: yes   
-          branch: '{{ tag_name | default(omit) }}'       
-          key_file: '{{ key_file_path }}'       
-        tags:
-         - clone
-         - deploy
+- hosts: all
+  roles:
+    - role: kitchen_test_role
+      

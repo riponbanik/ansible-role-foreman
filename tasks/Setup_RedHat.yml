@@ -1,30 +1,12 @@
 ---
-# - name: set hostname as fqdn
-#   hostname: name={{ foreman_hostname }}
-
-- name: copy script to modify /etc/hosts
-  copy:
-    src: mungehosts
-    dest: /usr/local/bin/mungehosts
-    mode: 0755
+- name: set hostname as fqdn
+  hostname: name={{ foreman_hostname }}
 
 - name: resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -l {{foreman_hostname}}
    
-- name: verify default hostname 
-  shell: hostname -f
-  register: default_hostname
-  
-- debug: var=default_hostname.stdout
-
-- name: verify /etc/resolv.conf 
-  shell: cat /etc/resolv.conf
-  register: resolvconf
-  
-- debug: var=resolvconf.stdout
-
 - name: install epel release
   yum: name=epel-release
 
@@ -44,18 +26,6 @@
       yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/{{puppet_version}}-release-el-7.noarch.rpm state=present
 
   when: ansible_distribution_major_version == "7"  
-
-- name: install puppet agent
-  yum: name=puppet
-
-- name: verify facter hostname 
-  shell: /opt/puppetlabs/bin/facter fqdn
-  register: facter_hostname
-  
-- debug: var=facter_hostname.stdout
-
-# - name: change hostname as per facter fqdn
-#   shell: echo facter_hostname.stdout > /etc/hostname
 
 - name: install foreman installer package
   yum: name=foreman-installer
