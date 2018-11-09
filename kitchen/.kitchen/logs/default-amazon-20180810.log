@@ -1,0 +1,4 @@
+I, [2018-10-08T17:06:57.467663 #2183]  INFO -- default-amazon-20180810: -----> Destroying <default-amazon-20180810>...
+I, [2018-10-08T17:06:57.642761 #2183]  INFO -- default-amazon-20180810: EC2 instance <i-060577a25dc83e3c2> destroyed.
+I, [2018-10-08T17:06:57.644128 #2183]  INFO -- default-amazon-20180810: Removing automatic key pair kitchen-defaultamazon20180810-rbanik-LT20172-2018-10-08T02:56:24Z-k92b4bnw
+I, [2018-10-08T17:06:57.713010 #2183]  INFO -- default-amazon-20180810: Finished destroying <default-amazon-20180810> (0m0.24s).

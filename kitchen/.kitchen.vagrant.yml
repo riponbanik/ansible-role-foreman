@@ -1,0 +1,47 @@
+driver:
+  name: vagrant
+  provider: hyperv
+  network:
+  - ["public_network", bridge: "Default Switch"]
+
+platforms:
+  - name: ansibleserver
+    driver_plugin: vagrant
+    driver_config:
+      box: centos/7      
+    transport:
+      max_ssh_sessions: 1
+    provisioner:
+      name: ansible_playbook
+      ansible_connection: winrm
+      ansible_inventory: inventory/hosts_local
+      require_windows_support: true
+      require_chef_for_busser: false
+      ansible_host_key_checking: false
+      ansible_verbose: true
+      ansible_verbosity: 4
+      playbook: playbook.yml
+    verifier:
+      name: shell
+      command: echo 'Skipping Verify'  
+
+  - name: winserver1803
+    driver_config:
+      box: windows_server_1803
+      communicator: winrm
+      # # needed to force provision of the vagrantfile
+      # provision: true
+      # # needed to run the ConfigureRemotingForAnsible.ps1
+      # vagrantfiles:
+      #   - vagrant_windows_target.rb
+    transport:
+      name: winrm
+    verifier:
+      name: pester
+      test_folder: tests
+    provisioner:
+      name: shell
+    
+
+suites:
+  - name: default

@@ -54,8 +54,8 @@
   
 - debug: var=facter_hostname.stdout
 
-- name: change hostname as per facter fqdn
-  shell: echo facter_hostname.stdout > /etc/hostname
+# - name: change hostname as per facter fqdn
+#   shell: echo facter_hostname.stdout > /etc/hostname
 
 - name: install foreman installer package
   yum: name=foreman-installer

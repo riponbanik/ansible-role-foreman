@@ -1,0 +1,4 @@
+I, [2018-10-08T17:06:56.820592 #2183]  INFO -- default-windows-2012r2: -----> Destroying <default-windows-2012r2>...
+I, [2018-10-08T17:06:57.401037 #2183]  INFO -- default-windows-2012r2: EC2 instance <i-085e7cf7a6d1b8645> destroyed.
+I, [2018-10-08T17:06:57.403168 #2183]  INFO -- default-windows-2012r2: Removing automatic key pair kitchen-defaultwindows2012r2-rbanik-LT20172-2018-10-08T02:49:58Z-9v70krqh
+I, [2018-10-08T17:06:57.466080 #2183]  INFO -- default-windows-2012r2: Finished destroying <default-windows-2012r2> (0m0.64s).
