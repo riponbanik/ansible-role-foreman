@@ -2,6 +2,12 @@
 - name: set hostname as fqdn
   hostname: name={{ foreman_hostname }}
 
+- name: copy script to modify /etc/hosts
+  copy:
+    src: mungehosts
+    dest: /usr/local/bin/mungehosts
+    mode: 0755  
+
 - name: resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
