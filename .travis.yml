@@ -6,9 +6,9 @@ env:
     playbook: test.yml
 
 addons:
+  hostname: foreman.example.com
   hosts:
     - foreman.example.com
-  hostname: foreman.example.com
   
 script:
   # Configure test script so we can run extra tests after playbook is run.
