@@ -8,7 +8,7 @@
 
 ---
 foreman:
-  foreman_url: https://foreman.vagrantup.com
+  foreman_url: "https://{{ansible_fqdn}}"
   puppetrun: false
   unattended: true
   authentication: true
@@ -17,7 +17,7 @@ foreman:
   passenger_ruby_package: tfm-rubygem-passenger-native
   plugin_prefix: tfm-rubygem-foreman_
   use_vhost: true
-  servername: foreman.vagrantup.com
+  servername: "{{ansible_fqdn}}"
   serveraliases:
   - foreman
   ssl: true
@@ -29,14 +29,14 @@ foreman:
   gpgcheck: true
   version: present
   plugin_version: present
-  db_manage: true
-  db_type: postgresql
+  db_manage: "{{ foreman_db_manage }}"
+  db_type: "{{ foreman_db_type }}"
   db_adapter: 
-  db_host: 
+  db_host: {{ foreman_db_host }}
   db_port: 
-  db_database: 
-  db_username: foreman
-  db_password: h8uRZvkAKknVzAeLK74rFd5VdWCBnuVG
+  db_database: {{ foreman_db_database }}
+  db_username: {{ foreman_db_username }}
+  db_password: {{ foreman_db_password }}
   db_sslmode: 
   db_root_cert: 
   db_pool: 5
@@ -58,13 +58,13 @@ foreman:
   server_ssl_port: 443
   server_ssl_ca: /etc/puppetlabs/puppet/ssl/certs/ca.pem
   server_ssl_chain: /etc/puppetlabs/puppet/ssl/certs/ca.pem
-  server_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/foreman.vagrantup.com.pem
+  server_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/"{{ansible_fqdn}}".pem
   server_ssl_certs_dir: ''
-  server_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/foreman.vagrantup.com.pem
+  server_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/"{{ansible_fqdn}}".pem
   server_ssl_crl: /etc/puppetlabs/puppet/ssl/crl.pem
   client_ssl_ca: /etc/puppetlabs/puppet/ssl/certs/ca.pem
-  client_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/foreman.vagrantup.com.pem
-  client_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/foreman.vagrantup.com.pem
+  client_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/"{{ansible_fqdn}}".pem
+  client_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/"{{ansible_fqdn}}".pem
   keepalive: true
   max_keepalive_requests: 100
   keepalive_timeout: 5
@@ -87,8 +87,8 @@ foreman:
   pam_service: foreman
   ipa_manage_sssd: true
   websockets_encrypt: true
-  websockets_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/foreman.vagrantup.com.pem
-  websockets_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/foreman.vagrantup.com.pem
+  websockets_ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/"{{ansible_fqdn}}".pem
+  websockets_ssl_cert: /etc/puppetlabs/puppet/ssl/certs/"{{ansible_fqdn}}".pem
   logging_level: info
   loggers: {}
   email_config_method: database
@@ -134,8 +134,8 @@ foreman_proxy:
   http: false
   ssl: true
   ssl_ca: /etc/puppetlabs/puppet/ssl/certs/ca.pem
-  ssl_cert: /etc/puppetlabs/puppet/ssl/certs/foreman.vagrantup.com.pem
-  ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/foreman.vagrantup.com.pem
+  ssl_cert: /etc/puppetlabs/puppet/ssl/certs/"{{ansible_fqdn}}".pem
+  ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/"{{ansible_fqdn}}".pem
   foreman_ssl_ca: 
   foreman_ssl_cert: 
   foreman_ssl_key: 

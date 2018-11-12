@@ -1,5 +1,35 @@
 ---
+# General config.
 foreman_version: 1.16
+foreman_answer_file_path: '/etc/foreman-installer/scenarios.d/foreman-answers.yaml'
+foreman_admin_username: admin
+foreman_admin_password: password
+foreman_db_type: mysql
+foreman_db_manage: true
+foreman_db_host: localhost
+foreman_db_database: foremandb
+foreman_db_username: foreman
+foreman_db_password: dbpassword
+
+# Compute Resources
+enable_ec2: false
+enable_vmware: false
+
+# Puppet config.
 puppet_version: puppet5
-base_only: true 
-install_puppet_master: false
+disable_puppet: false
+enable_puppetdb: false
+
+# Ansible config.
+enable_ansible: false
+
+# Chef config.
+enable_chef: false
+
+# Plugins
+foreman_plugins: ''
+foreman_proxy_plugins: ''
+foreman_compute: ''
+
+
+  

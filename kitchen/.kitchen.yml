@@ -1,6 +1,7 @@
 driver:
   name: vagrant
   provider: hyperv
+  differencing_disk: true
   network:
   - ["public_network", bridge: "Default Switch"]
 
