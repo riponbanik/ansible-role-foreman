@@ -3,5 +3,21 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
 
-# Setup/install tasks.
+# Configure command options (Enable Plugins/Compute/Proxy)
+- name: Install Plugins
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-foreman-plugin-{{ item }}' ]"
+  with_items: "{{ foreman_plugins }}"  
+
+- name: Install Proxy Plugins
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-foreman-proxy-plugin-{{ item }}' ]"
+  with_items: "{{ foreman_proxy_plugins }}" 
+
+- name: Install Compute Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-compute-{{ item }}' ]"
+  with_items: "{{ foreman_compute }}"    
+
+#Setup/install tasks.
 - include_tasks: "Setup_{{ ansible_os_family }}.yml"  

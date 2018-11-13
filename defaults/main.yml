@@ -1,7 +1,8 @@
 ---
 # General config.
-foreman_version: 1.16
+foreman_version: 1.19
 foreman_answer_file_path: '/etc/foreman-installer/scenarios.d/foreman-answers.yaml'
+foreman_cmd_options: []
 foreman_admin_username: admin
 foreman_admin_password: password
 foreman_db_type: mysql
@@ -30,6 +31,11 @@ enable_chef: false
 foreman_plugins: ''
 foreman_proxy_plugins: ''
 foreman_compute: ''
+
+# Options
+foreman_plugins_options: ''
+foreman_proxy_plugins_options: ''
+foreman_compute_options: ''
 
 
   

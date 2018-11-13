@@ -3,5 +3,8 @@
   roles:
     - role: kitchen_test_role
       foreman_hostname: foreman.vagrantup.com
+      foreman_version: 1.19      
+      foreman_plugins: 
+        - docker
 
       

@@ -1,3 +1,3 @@
-I, [2018-11-12T16:48:53.073721 #8816]  INFO -- Kitchen: -----> Starting Kitchen (v1.23.2)
-I, [2018-11-12T16:48:53.254732 #8816]  INFO -- Kitchen: -----> Destroying <default-testhost>...
-I, [2018-11-12T16:51:42.499998 #8816]  INFO -- Kitchen: -----> Kitchen is finished. (2m49.42s)
+I, [2018-11-13T17:08:04.811887 #23440]  INFO -- Kitchen: -----> Starting Kitchen (v1.23.2)
+I, [2018-11-13T17:08:04.998246 #23440]  INFO -- Kitchen: -----> Destroying <default-testhost>...
+I, [2018-11-13T17:08:19.995679 #23440]  INFO -- Kitchen: -----> Kitchen is finished. (0m15.18s)

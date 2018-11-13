@@ -8,6 +8,11 @@ Build fails when using docker in TravisCI due to hostname setting, tested with k
 Foreman require hostname to be fqdn. Use Ansible hostname module to change hostname to fqdn or use the following role variable to change hostname e.g.
    foreman_hostname: foreman.vagrantup.com
 
+When the install is successful, foreman can be accessed using https://foreman_fqdn with default credentials below
+ 
+   User: admin
+   Password: password
+
 ## Role Variables
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 

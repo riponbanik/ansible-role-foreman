@@ -57,3 +57,5 @@ test/vagrant-spec/boxes/*.box
 # Kitchen 
 kitchen/.kitchen
 .kitchen
+.kitchen.local.yml
+playbook.local.yml

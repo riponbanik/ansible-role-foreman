@@ -18,8 +18,12 @@
 - name: install epel release
   yum: name=epel-release
 
-- name: exclude passenger from epel
-  lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"
+- name: install RedHat Optional Repo
+  command: yum-config-manager --enable rhel-7-server-optional-rpms
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+# - name: exclude passenger from epel
+#   lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"
 
 - name: configure foreman for EL7
   block:     
@@ -54,12 +58,11 @@
         --foreman-admin-username={{ foreman_admin_username }} 
         --foreman-admin-password={{ foreman_admin_password }}  
         --no-enable-puppet --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
+        {{foreman_cmd_options | join (' ')}}
   when: disable_puppet | bool
 
 - name: Install and Configure Foreman with Puppet
-  block:
-    - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
-    - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
+  block:    
     - name: Install foreman with Puppet
       command: > 
         foreman-installer 
@@ -73,10 +76,13 @@
         --foreman-admin-username={{ foreman_admin_username }} 
         --foreman-admin-password={{ foreman_admin_password }}  
         --puppet-autosign-entries='*'
+        {{foreman_cmd_options | join (' ')}}
   when: disable_puppet == false
 
 - name: Install and Configure PuppetDB
   block:    
+    # - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
+    # - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
     - name: Install puppet modules
       command: '/opt/puppetlabs/bin/puppet module install puppetlabs-puppetdb --version 5.1.2'
       args:
@@ -159,19 +165,7 @@
         --enable-foreman-compute-vmware        
   when: enable_ec2 | bool 
 
-- name: Install Plugins
-  block:
-    - name: Enable plugins
-      lineinfile:
-        path: {{ foreman_answer_file_path }}
-        regexp: '^foreman::plugin::{{item}}: false'
-        line: 'foreman::plugin::{{item}}: true'
-      with_items: {{foreman_plugins }}
-    - name: Configure the plugins  
-      command: > 
-        foreman-installer  
-        --foreman-unattended=true
-  
+
       
   
 
