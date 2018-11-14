@@ -1,12 +1,18 @@
 driver:
   name: vagrant
   provider: hyperv
-  differencing_disk: true
+  customize: 
+    differencing_disk: true    
+    cpus: 2
+    memory: 2048  
   network:
   - ["public_network", bridge: "Default Switch"]
 
+verifier:
+   name: inspec
+
 platforms:
-  - name: testhost
+  - name: el7
     driver_plugin: vagrant
     driver_config:
       box: centos/7      
@@ -15,8 +21,7 @@ platforms:
     provisioner:
       name: ansible_playbook
       roles_path: ../
-      role_name: kitchen_test_role
-      ansible_version: 2.6.0
+      role_name: kitchen_test_role      
       ansible_connection: local   
       ansible_inventory: inventory/hosts   
       require_windows_support: true
@@ -24,10 +29,42 @@ platforms:
       ansible_host_key_checking: false
       ansible_verbose: true
       ansible_verbosity: 4
-      playbook: playbook.yml
-    verifier:
-      name: shell
-      command: echo 'Skipping Verify'  
-  
+      playbook: playbook.yml   
+  - name: u16
+    driver_plugin: vagrant
+    driver_config:
+      box: bento/ubuntu-16.04
+    transport:
+      max_ssh_sessions: 1
+    provisioner:
+      name: ansible_playbook
+      roles_path: ../
+      role_name: kitchen_test_role      
+      ansible_connection: local   
+      ansible_inventory: inventory/hosts   
+      require_windows_support: true
+      require_chef_for_busser: false
+      ansible_host_key_checking: false
+      ansible_verbose: true
+      ansible_verbosity: 4
+      playbook: playbook.yml   
+  - name: u18
+    driver_plugin: vagrant
+    driver_config:
+      box: generic/ubuntu1804
+    transport:
+      max_ssh_sessions: 1
+    provisioner:
+      name: ansible_playbook
+      roles_path: ../
+      role_name: kitchen_test_role      
+      ansible_connection: local   
+      ansible_inventory: inventory/hosts   
+      require_windows_support: true
+      require_chef_for_busser: false
+      ansible_host_key_checking: false
+      ansible_verbose: true
+      ansible_verbosity: 4
+      playbook: playbook.yml         
 suites:
   - name: default

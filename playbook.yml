@@ -1,0 +1,10 @@
+---
+- hosts: all  
+  roles:
+    - role: ansible-role-foreman
+      foreman_version: 1.19      
+      foreman_plugins: 
+        - docker
+      puppet_options:
+          autosign-entries: '*'
+      

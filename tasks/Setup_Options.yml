@@ -1,0 +1,59 @@
+---
+# Install Options
+- name: Install Plugins
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-foreman-plugin-{{ item }}' ]"
+  with_items: "{{ foreman_plugins | default([]) }}"  
+  
+- name: Install Proxy Plugins
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-foreman-proxy-plugin-{{ item }}' ]"
+  with_items: "{{ foreman_proxy_plugins | default([]) }}"   
+
+- name: Install Compute 
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-compute-{{ item }}' ]"
+  with_items: "{{ foreman_compute | default([]) }}"      
+
+# Configure Options
+- name: Configure Plugins Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--foreman-plugin-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ foreman_plugin_options | default({}) }}"
+  when: foreman_plugin_options is defined
+
+- name: Configure Proxy Plugins Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--foreman-proxy-plugin-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ foreman_proxy_plugin_options | default({}) }}"    
+  when: foreman_proxy_plugin_options is defined
+
+- name: Configure Compute Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--foreman-compute-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ foreman_compute_options | default({}) }}"  
+  when: foreman_compute_options is defined
+
+- name: Configure Foreman Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--foreman-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ foreman_options | default({}) }}" 
+  when: foreman_options is defined
+
+- name: Configure Foreman Proxy Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--foreman-proxy-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ foreman_proxy_options | default({}) }}"      
+  when: foreman_proxy_options is defined 
+
+- name: Configure Puppet Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--puppet-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ puppet_options | default({}) }}"  
+  when: puppet_options is defined
+
+- name: Configure Puppet Server Options
+  set_fact:
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--puppet-server-{{ item.key }}={{ item.value }}' ]"
+  with_dict: "{{ puppet_server_options | default({}) }}"  
+  when: puppet_server_options defined

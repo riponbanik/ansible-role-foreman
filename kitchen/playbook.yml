@@ -1,10 +1,13 @@
 ---
 - hosts: all
   roles:
-    - role: kitchen_test_role
+    - role: kitchen_test_role      
+      foreman_version: 1.19
       foreman_hostname: foreman.vagrantup.com
-      foreman_version: 1.19      
+      disable_puppet: false
       foreman_plugins: 
         - docker
-
+      puppet_options:
+          autosign-entries: '*'
+      
       

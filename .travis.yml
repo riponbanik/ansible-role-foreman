@@ -1,27 +1,36 @@
 ---
-sudo: required
-services: docker
+matrix:
+  include:
+    - dist: xenial            
+    - dist: trusty
+      sudo: required
 
+language: python
+python: "2.7"
+
+# Doc: https://docs.travis-ci.com/user/customizing-the-build#Build-Matrix
 env:
-  - distro: centos7
-    playbook: test.yml
-
-addons:
-  hostname: foreman.example.com
-  hosts:
-    - foreman.example.com
+  - ANSIBLE_VERSION=latest
+  - ANSIBLE_VERSION=2.6.0
+  - ANSIBLE_VERSION=2.4.0
   
+branches:
+  only:
+    - master
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  # Install Ansible.
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible-lint; fi
+
 script:
-  # Configure test script so we can run extra tests after playbook is run.
-  - export container_id=$(date +%s)
-  - export cleanup=false
+  # Check the role/playbook's syntax.
+  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
 
-  # Download test shim.
-  #- wget -O ${PWD}/tests/test.sh https://gist.githubusercontent.com/geerlingguy/73ef1e5ee45d8694570f334be385e181/raw/
-  - chmod +x ${PWD}/tests/test.sh
+  # Run the role/playbook with ansible-playbook.
+  - ansible-playbook -i tests/inventory tests/test.yml -vvvv 
 
-  # Run tests.
-  - ${PWD}/tests/test.sh
 
-# notifications:
-#   webhooks: https://galaxy.ansible.com/api/v1/notifications/

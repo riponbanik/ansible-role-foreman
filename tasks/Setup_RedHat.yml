@@ -43,6 +43,9 @@
 - name: install foreman installer package
   yum: name=foreman-installer
 
+- name: install puppet agent
+  yum: name=puppet
+
 - name: Install and Configure foreman without puppet
   block:
     - name: Install foreman without puppet 
@@ -57,7 +60,7 @@
         --foreman-db-password={{ foreman_db_password }}                    
         --foreman-admin-username={{ foreman_admin_username }} 
         --foreman-admin-password={{ foreman_admin_password }}  
-        --no-enable-puppet --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
+        --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
         {{foreman_cmd_options | join (' ')}}
   when: disable_puppet | bool
 
@@ -74,8 +77,7 @@
         --foreman-db-username={{ foreman_db_username }}                    
         --foreman-db-password={{ foreman_db_password }}                    
         --foreman-admin-username={{ foreman_admin_username }} 
-        --foreman-admin-password={{ foreman_admin_password }}  
-        --puppet-autosign-entries='*'
+        --foreman-admin-password={{ foreman_admin_password }}          
         {{foreman_cmd_options | join (' ')}}
   when: disable_puppet == false
 
@@ -131,39 +133,6 @@
       puppet: timeout=600
   when: (disable_puppet == false) and (enable_puppetdb == true)
 
-- name: Install Ansible Plugin
-  block:
-    - name: Configure foreman with ansible  
-      command: >
-        foreman-installer
-        --enable-foreman-plugin-ansible
-        --enable-foreman-proxy-plugin-ansible
-  when: enable_ansible | bool
-
-- name: Install Chef Plugin
-  block:
-    - name: Configure foreman with chef 
-      command: >
-        foreman-installer
-        --enable-foreman-plugin-chef
-        --enable-foreman-proxy-plugin-chef
-  when: enable_chef | bool  
-
-- name: Enable Compute EC2
-  block:
-    - name: Configure Compute - EC2
-      command: >
-        foreman-installer
-        --enable-foreman-compute-ec2        
-  when: enable_ec2 | bool 
-
-- name: Enable Compute VMWare
-  block:
-    - name: Configure Compute - VMWare
-      command: >
-        foreman-installer
-        --enable-foreman-compute-vmware        
-  when: enable_ec2 | bool 
 
 
       

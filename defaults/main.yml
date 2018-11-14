@@ -12,30 +12,23 @@ foreman_db_database: foremandb
 foreman_db_username: foreman
 foreman_db_password: dbpassword
 
-# Compute Resources
-enable_ec2: false
-enable_vmware: false
-
 # Puppet config.
-puppet_version: puppet5
 disable_puppet: false
+puppet_version: puppet5
 enable_puppetdb: false
 
-# Ansible config.
-enable_ansible: false
+# Plugins/Capability.
+foreman_plugins: []
+foreman_proxy_plugins: []
+foreman_compute: []
 
-# Chef config.
-enable_chef: false
-
-# Plugins
-foreman_plugins: ''
-foreman_proxy_plugins: ''
-foreman_compute: ''
-
-# Options
-foreman_plugins_options: ''
-foreman_proxy_plugins_options: ''
-foreman_compute_options: ''
-
+# Options.
+foreman_options: {}
+foreman_proxy_options: {}
+foreman_plugin_options: {}
+foreman_proxy_plugin_options: {}
+foreman_compute_options: {}
+puppet_options: {}
+puppet_server_options: {}
 
   
