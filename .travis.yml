@@ -6,7 +6,7 @@ matrix:
 
 language: python
 python:
-  - '3.5'
+  - '2.7'
 
 # Doc: https://docs.travis-ci.com/user/customizing-the-build#Build-Matrix
 env:
