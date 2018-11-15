@@ -46,6 +46,7 @@
 
 - name: Install puppet agent
   apt: name=puppet-agent force=yes update_cache=yes
+  when: disable_puppet | bool
 
 - name: Install and Configure foreman without puppet
   block:
