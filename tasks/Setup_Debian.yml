@@ -42,10 +42,10 @@
         state: present     
 
 - name: Download foreman installer package
-  apt: name=foreman-installer force=yes
+  apt: name=foreman-installer force=yes update_cache=yes
 
 - name: Install puppet agent
-  apt: name=puppet force=yes
+  apt: name=puppet-agent force=yes update_cache=yes
 
 - name: Install and Configure foreman without puppet
   block:

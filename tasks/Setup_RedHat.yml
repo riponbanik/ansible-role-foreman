@@ -44,7 +44,7 @@
   yum: name=foreman-installer
 
 - name: Install puppet agent
-  yum: name=puppet
+  yum: name=puppet-agent
 
 - name: Install and Configure foreman without puppet
   block:
