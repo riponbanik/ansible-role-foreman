@@ -9,8 +9,9 @@
 
   roles:
     - role: ansible-role-foreman
-      foreman_version: 1.16
+      foreman_version: 1.19
       foreman_hostname: foreman.vagrantup.com
+      foreman_db_type: sqlite
       disable_puppet: false
       foreman_plugins: 
         - docker
