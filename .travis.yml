@@ -31,6 +31,6 @@ script:
   - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
 
   # Run the role/playbook with ansible-playbook.
-  - ansible-playbook -i tests/inventory tests/test.yml -vvvv 
+  - ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo -vvvv 
 
 
