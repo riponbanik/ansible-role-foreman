@@ -6,8 +6,10 @@ matrix:
       sudo: required
 
 language: python
-python: "2.7.12"
-
+python:
+  - '3.5'
+  - '2.7.13'
+  
 # Doc: https://docs.travis-ci.com/user/customizing-the-build#Build-Matrix
 env:
   - ANSIBLE_VERSION=latest
@@ -19,6 +21,7 @@ branches:
     - master
 
 before_install:
+  - sudo cat /etc/issue
   - sudo apt-get update -qq
 
 install:
