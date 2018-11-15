@@ -4,9 +4,9 @@ matrix:
     - dist: xenial            
       sudo: yes  
 
-# language: python
-# python:
-#   - '2.7'
+language: python
+python:
+  - '3.5'
 
 # Doc: https://docs.travis-ci.com/user/customizing-the-build#Build-Matrix
 env:
