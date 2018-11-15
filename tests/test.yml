@@ -8,4 +8,11 @@
       changed_when: false
 
   roles:
-    - ansible-role-foreman
+    - role: ansible-role-foreman
+      foreman_version: 1.19
+      foreman_hostname: foreman.vagrantup.com
+      disable_puppet: false
+      foreman_plugins: 
+        - docker
+      puppet_options:
+          autosign-entries: '*'
