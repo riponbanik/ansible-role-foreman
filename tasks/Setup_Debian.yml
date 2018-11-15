@@ -1,15 +1,15 @@
 ---
-- name: set hostname as fqdn
+- name: Set hostname as fqdn
   hostname: name={{ foreman_hostname }}
   when: foreman_hostname is defined
 
-- name: copy script to modify /etc/hosts
+- name: Copy script to modify /etc/hosts
   copy:
     src: mungehosts
     dest: /usr/local/bin/mungehosts
     mode: 0755  
 
-- name: resolve hostname via /etc/hosts to resolve `hostname -f`
+- name: Resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -a "{{ansible_default_ipv4.address}} {{foreman_hostname}}"
@@ -26,12 +26,12 @@
 
 - name: Install Foreman Repository
   block:
-    - name: Install Foerman Repo     
+    - name: Install Foreman Repo     
       apt_repository:
         repo: deb http://deb.theforeman.org/ {{ansible_distribution_release}} {{foreman_version}}
         state: present
         filename: /etc/apt/sources.list.d/foreman.list
-    - name: Install Foerman Plugin Repo     
+    - name: Install Foreman Plugin Repo     
       apt_repository:
         repo: deb http://deb.theforeman.org/ plugins {{foreman_version}}
         state: present
@@ -41,8 +41,11 @@
         url: https://deb.theforeman.org/pubkey.gpg
         state: present     
 
-- name: install puppet agent
-  apt: name=puppet
+- name: Download foreman installer package
+  apt: name=foreman-installer
+
+- name: Install puppet agent
+  apt: name=puppet force=yes
 
 - name: Install and Configure foreman without puppet
   block:

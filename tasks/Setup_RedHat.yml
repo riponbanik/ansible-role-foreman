@@ -1,31 +1,31 @@
 ---
-- name: set hostname as fqdn
+- name: Set hostname as fqdn
   hostname: name={{ foreman_hostname }}
   when: foreman_hostname is defined
 
-- name: copy script to modify /etc/hosts
+- name: Copy script to modify /etc/hosts
   copy:
     src: mungehosts
     dest: /usr/local/bin/mungehosts
     mode: 0755  
 
-- name: resolve hostname via /etc/hosts to resolve `hostname -f`
+- name: Resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -a "{{ansible_default_ipv4.address}} {{foreman_hostname}}"
   when: foreman_hostname is defined
    
-- name: install epel release
+- name: Install epel release
   yum: name=epel-release
 
-- name: install RedHat Optional Repo
+- name: Install RedHat Optional Repo
   command: yum-config-manager --enable rhel-7-server-optional-rpms
   when: ansible_distribution == 'Red Hat Enterprise Linux'
 
 # - name: exclude passenger from epel
 #   lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"
 
-- name: configure foreman for EL7
+- name: Configure foreman for EL7
   block:     
     - name: install foreman repo
       yum: name=http://yum.theforeman.org/releases/{{foreman_version}}/el7/x86_64/foreman-release.rpm state=present
@@ -40,10 +40,10 @@
 
   when: ansible_distribution_major_version == "7"  
 
-- name: install foreman installer package
+- name: Download foreman installer package
   yum: name=foreman-installer
 
-- name: install puppet agent
+- name: Install puppet agent
   yum: name=puppet
 
 - name: Install and Configure foreman without puppet
