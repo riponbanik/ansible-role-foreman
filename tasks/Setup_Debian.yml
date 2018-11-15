@@ -42,7 +42,7 @@
         state: present     
 
 - name: Download foreman installer package
-  apt: name=foreman-installer
+  apt: name=foreman-installer force=yes
 
 - name: Install puppet agent
   apt: name=puppet force=yes
