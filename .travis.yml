@@ -21,6 +21,7 @@ branches:
 before_install:
   - sudo cat /etc/issue
   - sudo apt-get update -qq
+  - gem install hocon
 
 install:
   # Install Ansible.
