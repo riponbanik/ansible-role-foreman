@@ -6,6 +6,8 @@ group :test do
   gem 'kitchen-docker'  
   gem 'kitchen-vagrant'
   gem 'kitchen-pester'
+  gem 'kitchen-vcenter'  
+  gem 'kitchen-ec2'
   gem 'winrm'
   gem 'winrm-fs'  
 end

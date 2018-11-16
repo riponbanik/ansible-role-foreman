@@ -2,7 +2,7 @@ Ansible Role to install and configure Foreman
 
 [![Build Status](https://travis-ci.org/riponbanik/ansible-role-foreman.svg?branch=master)](https://travis-ci.org/riponbanik/ansible-role-foreman)
 
-Build fails when using docker in TravisCI due to hostname setting, tested with kitchen-ansible using hyperv vagrant machine
+Ubuntu VM in TravisCI has got issue, tested with kitchen-ansible using hyperv vagrant machine and Amazon ec2
 
 ## Requirements
 Foreman require hostname to be fqdn. Use Ansible hostname module to change hostname to fqdn or use the following role variable to change hostname e.g.
@@ -22,7 +22,11 @@ By default, `all-in-one` Foreman installation includes a Puppet master, but this
 
 ## Dependencies
 
-None.
+VM (on-perm or cloud) is needed to install. Tested with the following OS -
+ 
+   1. Redhat Enterprise Linux 7
+   2. CentOS 7    
+   3. Ubuntu 16.04 (Xenial)   
 
 ## Example Playbook
 
@@ -44,5 +48,5 @@ Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 
 ## Author Information
 
-This role was created in 2018 by [Ripon Banik ](https://www.linkedin.com/in/ripon-banik-79956b23/)
+This role was created in 2018 by [Ripon Banik](https://www.linkedin.com/in/ripon-banik-79956b23/)
 

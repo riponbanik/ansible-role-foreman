@@ -20,7 +20,18 @@
 
 - name: Install RedHat Optional Repo
   command: yum-config-manager --enable rhel-7-server-optional-rpms
-  when: ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "7" 
+  ignore_errors: true
+
+- name: Enable Optional Repo
+  ini_file:
+    path: /etc/yum.repos.d/redhat-rhui.repo
+    section: rhui-REGION-rhel-server-optional
+    option: enabled
+    value: 1
+    backup: yes
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "7"
+  ignore_errors: true
 
 # - name: exclude passenger from epel
 #   lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"

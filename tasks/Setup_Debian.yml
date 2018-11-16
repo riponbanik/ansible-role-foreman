@@ -26,6 +26,10 @@
 
 - name: Install Foreman Repository
   block:
+    - name: Add Public Key      
+      apt_key:
+        url: https://deb.theforeman.org/pubkey.gpg
+        state: present   
     - name: Install Foreman Repo     
       apt_repository:
         repo: deb http://deb.theforeman.org/ {{ansible_distribution_release}} {{foreman_version}}
@@ -35,11 +39,7 @@
       apt_repository:
         repo: deb http://deb.theforeman.org/ plugins {{foreman_version}}
         state: present
-        filename: /etc/apt/sources.list.d/foreman_plugins.list    
-    - name: Add Public Key      
-      apt_key:
-        url: https://deb.theforeman.org/pubkey.gpg
-        state: present     
+        filename: /etc/apt/sources.list.d/foreman_plugins.list     
 
 - name: Download foreman installer package
   apt: name=foreman-installer force=yes update_cache=yes
