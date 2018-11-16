@@ -16,5 +16,4 @@
       foreman_plugins: 
         - docker
       puppet_options:
-          autosign-entries: '*'
-          unavailable-runmodes: ['systemd.timer']    
+        unavailable-runmodes: ['systemd.timer']    
