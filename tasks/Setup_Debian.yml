@@ -79,7 +79,8 @@
         --foreman-db-username={{ foreman_db_username }}                    
         --foreman-db-password={{ foreman_db_password }}                    
         --foreman-admin-username={{ foreman_admin_username }} 
-        --foreman-admin-password={{ foreman_admin_password }}          
+        --foreman-admin-password={{ foreman_admin_password }}       
+        --puppet-unavailable-runmodes=['systemd.timer']   
         {{foreman_cmd_options | join (' ')}}
   when: disable_puppet == false
 
