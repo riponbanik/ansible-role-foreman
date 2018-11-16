@@ -17,3 +17,4 @@
         - docker
       puppet_options:
           autosign-entries: '*'
+          unavailable-runmodes: ['systemd.timer']    
