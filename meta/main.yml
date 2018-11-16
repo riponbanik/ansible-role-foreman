@@ -1,6 +1,6 @@
 dependencies: []
 galaxy_info:
-  role_name: ansible-role-foreman
+  role_name: foreman
   author: Ripon Banik
   description: Install and Configure Foreman 
   company: Lyrcis Pvt Ltd (optional)

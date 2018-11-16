@@ -34,7 +34,7 @@ VM (on-perm or cloud) is needed to install. Tested with the following OS -
       vars_files:
         - vars/main.yml
       roles:
-        - role: riponbanik.foreman 
+        - role:  riponbanik.foreman
           foreman_hostname: foreman.vagrantup.com
 
 ## License
