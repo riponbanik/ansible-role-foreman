@@ -8,6 +8,7 @@ group :test do
   gem 'kitchen-pester'
   gem 'kitchen-vcenter'  
   gem 'kitchen-ec2'
+  gem 'kitchen-inspec'
   gem 'winrm'
   gem 'winrm-fs'  
 end
