@@ -19,7 +19,7 @@ branches:
     - master
 
 before_install:
-  - sudo cat /etc/issue
+  - ruby --version
   - sudo apt-get update -qq
   - gem install hocon
 
