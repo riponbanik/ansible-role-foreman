@@ -41,7 +41,7 @@ VM (on-perm or cloud) is needed to install. Tested with the following OS -
 
 ### Install the role from ansible galaxy to ansible default resarch path
 ```
-sudo pip install riponbanik.foreman -p /etc/ansible/roles
+sudo ansible-galaxy install riponbanik.foreman -p /etc/ansible/roles
 ```
 
 ### Run the installation locally on the machine
