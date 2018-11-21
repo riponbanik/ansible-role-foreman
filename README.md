@@ -9,7 +9,7 @@ Foreman require hostname to be fqdn. Use Ansible hostname module to change hostn
    foreman_hostname: foreman.vagrantup.com
 
 When the install is successful, foreman can be accessed using https://foreman_fqdn with default credentials below
- 
+
    User: admin
    Password: password
 
@@ -23,7 +23,7 @@ By default, `all-in-one` Foreman installation includes a Puppet master, but this
 ## Dependencies
 
 VM (on-perm or cloud) is needed to install. Tested with the following OS -
- 
+
    1. Redhat Enterprise Linux 7
    2. CentOS 7    
    3. Ubuntu 16.04 (Xenial)   
@@ -37,6 +37,18 @@ VM (on-perm or cloud) is needed to install. Tested with the following OS -
         - role:  riponbanik.foreman
           foreman_hostname: foreman.vagrantup.com
 
+## Installation
+
+### Install the role from ansible galaxy to ansible default resarch path
+```
+sudo pip install riponbanik.foreman -p /etc/ansible/roles
+```
+
+### Run the installation locally on the machine
+```
+sudo ansible-playbook -c local -i "localhost," playbook.yml
+```
+
 ## License
 
 MIT / BSD
@@ -49,4 +61,3 @@ Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 ## Author Information
 
 This role was created in 2018 by [Ripon Banik](https://www.linkedin.com/in/ripon-banik-79956b23/)
-

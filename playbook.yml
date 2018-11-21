@@ -1,7 +1,8 @@
 ---
 - hosts: all  
   roles:
-    - role: ansible-role-foreman
+    - role: riponbanik.foreman
+      foreman_hostname: foreman.vagrantup.com
       foreman_version: 1.19      
       foreman_plugins: 
         - docker
