@@ -4,7 +4,7 @@
   include_vars: "{{ ansible_os_family }}.yml"
 
 # Setup/options.
-- include_tasks: "Setup_Options.yml"  
+- include_tasks: "Setup_Options.yml"
 
 # Setup/install tasks.
-- include_tasks: "Setup_{{ ansible_os_family }}.yml"  
+- include_tasks: "Setup_{{ ansible_os_family }}.yml"

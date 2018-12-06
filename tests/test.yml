@@ -13,8 +13,7 @@
       foreman_hostname: foreman.vagrantup.com
       foreman_db_type: mysql
       disable_puppet: false
-      foreman_plugins: 
+      foreman_plugins:
         - docker
       puppet_options:
           autosign-entries: '*'
-              

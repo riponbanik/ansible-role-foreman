@@ -7,20 +7,20 @@
   copy:
     src: mungehosts
     dest: /usr/local/bin/mungehosts
-    mode: 0755  
+    mode: 0755
 
 - name: Resolve hostname via /etc/hosts to resolve `hostname -f`
-  #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"   
+  #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -a "{{ansible_default_ipv4.address}} {{foreman_hostname}}"
   when: foreman_hostname is defined
-   
+
 - name: Install epel release
   yum: name=epel-release
 
 - name: Install RedHat Optional Repo
   command: yum-config-manager --enable rhel-7-server-optional-rpms
-  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "7" 
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "7"
   ignore_errors: true
 
 - name: Enable Optional Repo
@@ -37,19 +37,19 @@
 #   lineinfile: dest=/etc/yum.repos.d/epel.repo  insertafter='^enabled=1' line="exclude=passenger* mod_passenger*"
 
 - name: Configure foreman for EL7
-  block:     
+  block:
     - name: install foreman repo
       yum: name=http://yum.theforeman.org/releases/{{foreman_version}}/el7/x86_64/foreman-release.rpm state=present
 
     - name: disable firewalld
-      service: name=firewalld state=stopped enabled=no      
+      service: name=firewalld state=stopped enabled=no
       ignore_errors: true
 
     - name: install puppet repo
       yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/{{puppet_version}}-release-el-7.noarch.rpm state=present
       when: disable_puppet == false
 
-  when: ansible_distribution_major_version == "7"  
+  when: ansible_distribution_major_version == "7"
 
 - name: Download foreman installer package
   yum: name=foreman-installer
@@ -60,41 +60,41 @@
 
 - name: Install and Configure foreman without puppet
   block:
-    - name: Install foreman without puppet 
+    - name: Install foreman without puppet
       command: >
         foreman-installer
         --foreman-unattended=true
         --foreman-db-manage={{ foreman_db_manage | bool | lower }}
-        --foreman-db-type={{ foreman_db_type }}     
-        --foreman-db-host={{ foreman_db_host }}                  
-        --foreman-db-database={{ foreman_db_database }}                   
-        --foreman-db-username={{ foreman_db_username }}                    
-        --foreman-db-password={{ foreman_db_password }}                    
-        --foreman-admin-username={{ foreman_admin_username }} 
-        --foreman-admin-password={{ foreman_admin_password }}  
+        --foreman-db-type={{ foreman_db_type }}
+        --foreman-db-host={{ foreman_db_host }}
+        --foreman-db-database={{ foreman_db_database }}
+        --foreman-db-username={{ foreman_db_username }}
+        --foreman-db-password={{ foreman_db_password }}
+        --foreman-admin-username={{ foreman_admin_username }}
+        --foreman-admin-password={{ foreman_admin_password }}
         --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
         {{foreman_cmd_options | join (' ')}}
   when: disable_puppet | bool
 
 - name: Install and Configure Foreman with Puppet
-  block:    
+  block:
     - name: Install foreman with Puppet
-      command: > 
-        foreman-installer 
+      command: >
+        foreman-installer
         --foreman-unattended=true
-        --enable-foreman --enable-foreman-cli --enable-foreman-proxy         
+        --enable-foreman --enable-foreman-cli --enable-foreman-proxy
         --foreman-db-manage={{ foreman_db_manage | bool | lower }}
-        --foreman-db-type={{ foreman_db_type }}                  
-        --foreman-db-database={{ foreman_db_database }}                   
-        --foreman-db-username={{ foreman_db_username }}                    
-        --foreman-db-password={{ foreman_db_password }}                    
-        --foreman-admin-username={{ foreman_admin_username }} 
-        --foreman-admin-password={{ foreman_admin_password }}          
+        --foreman-db-type={{ foreman_db_type }}
+        --foreman-db-database={{ foreman_db_database }}
+        --foreman-db-username={{ foreman_db_username }}
+        --foreman-db-password={{ foreman_db_password }}
+        --foreman-admin-username={{ foreman_admin_username }}
+        --foreman-admin-password={{ foreman_admin_password }}
         {{foreman_cmd_options | join (' ')}}
   when: disable_puppet == false
 
 - name: Install and Configure PuppetDB
-  block:    
+  block:
     # - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line="postgresql::globals::version{{ ':' }}  '9.6'" state=present
     # - lineinfile: dest=/etc/foreman-installer/custom-hiera.yaml line='postgresql::globals::manage_package_repo{{ ':' }}  true' state=present
     - name: Install puppet modules
@@ -107,7 +107,7 @@
       file: path=/etc/puppetlabs/code/environments/production/modules/profiles/manifests state=directory
 
     - name: copy profiles puppetdb manifests
-      template: src=mypuppetdb.pp.j2 dest=/etc/puppetlabs/code/environments/production/modules/profiles/manifests/mypuppetdb.pp      
+      template: src=mypuppetdb.pp.j2 dest=/etc/puppetlabs/code/environments/production/modules/profiles/manifests/mypuppetdb.pp
 
     - name: Apply profiles Puppet
       command: /opt/puppetlabs/bin/puppet apply profiles
@@ -131,23 +131,16 @@
       puppet: timeout=600
 
     - name: run foreman with puppetdb
-      command: > 
-        foreman-installer  
+      command: >
+        foreman-installer
         --foreman-unattended=true
         --enable-foreman-plugin-puppetdb
-        --puppet-server-storeconfigs-backend=puppetdb 
-        --puppet-server-reports=foreman,puppetdb  
-        --puppet-server-foreman-url=https://{{ansible_fqdn}}         
-        --foreman-plugin-puppetdb-address='https://{{ansible_fqdn}}:8081/pdb/cmd/v1' 
-        --foreman-plugin-puppetdb-dashboard-address='http://{{ansible_fqdn}}:8080/pdb/dashboard' 
+        --puppet-server-storeconfigs-backend=puppetdb
+        --puppet-server-reports=foreman,puppetdb
+        --puppet-server-foreman-url=https://{{ansible_fqdn}}
+        --foreman-plugin-puppetdb-address='https://{{ansible_fqdn}}:8081/pdb/cmd/v1'
+        --foreman-plugin-puppetdb-dashboard-address='http://{{ansible_fqdn}}:8080/pdb/dashboard'
 
     - name: Run of puppet agent (After Foreman connect to DB running agent to make sure that Postgresql DB has pg_hba rules for PuppetDB)
       puppet: timeout=600
   when: (disable_puppet == false) and (enable_puppetdb == true)
-
-
-
-      
-  
-
-
