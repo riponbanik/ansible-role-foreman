@@ -66,6 +66,33 @@ VM (on-perm or cloud) is needed to install. Tested with the following OS -
             chef-private-key: '/etc/opscode/foreman.pem'
             chef-ssl-verify: 'false'
 
+    - name: Install Ansible
+      hosts: servers
+      vars_files:
+        - vars/main.yml
+      roles:
+        - role:  riponbanik.foreman
+          foreman_hostname: foreman.vagrantup.com
+          foreman_version: 1.19  
+          foreman_plugins:
+            - ansible
+            - remote-execution
+          foreman_proxy_plugins:
+            - ansible
+            - remote-execution-ssh
+
+    - name: Install Ansible
+      hosts: servers
+      vars_files:
+        - vars/main.yml
+      roles:
+        - role:  riponbanik.foreman
+          foreman_hostname: foreman.vagrantup.com
+          foreman_version: 1.19  
+          foreman_compute:
+            - ec2
+
+
 ## Installation
 
 ### Install the role from ansible galaxy to ansible default resarch path
