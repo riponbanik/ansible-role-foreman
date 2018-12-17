@@ -30,12 +30,41 @@ VM (on-perm or cloud) is needed to install. Tested with the following OS -
 
 ## Example Playbook
 
-    - hosts: servers
+    - name: Install Puppet Master
+      hosts: servers
       vars_files:
         - vars/main.yml
       roles:
         - role:  riponbanik.foreman
           foreman_hostname: foreman.vagrantup.com
+
+    - name: Install Chef Server
+      hosts: servers
+      vars_files:
+        - vars/main.yml
+      roles:
+        - role:  riponbanik.foreman
+          foreman_hostname: foreman.vagrantup.com
+          foreman_version: 1.19
+          foreman_plugins:
+            - chef
+            - tasks
+
+    - name: Install Chef Proxy
+      hosts: servers
+      vars_files:
+        - vars/main.yml
+      roles:
+        - role:  riponbanik.foreman
+          foreman_hostname: foreman.vagrantup.com
+          foreman_version: 1.19  
+          foreman_proxy_plugins:
+            - chef
+          foreman_proxy_plugin_options:
+            chef-server-url: 'https://chef.example.com/organizations/default'
+            chef-client-name: 'foreman'
+            chef-private-key: '/etc/opscode/foreman.pem'
+            chef-ssl-verify: 'false'
 
 ## Installation
 
