@@ -12,7 +12,7 @@
 
 - name: Install Compute
   set_fact:
-    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-compute-{{ item }}' ]"
+    foreman_cmd_options: "{{ foreman_cmd_options }}  +  [ '--enable-foreman-compute-{{ item }}' ]"
   with_items: "{{ foreman_compute | default([]) }}"
 
 # Configure Options
