@@ -3,7 +3,7 @@ galaxy_info:
   role_name: foreman
   author: Ripon Banik
   description: Install and Configure Foreman
-  company: Lyrcis Pvt Ltd (optional)
+  company: Lyrics Pvt Ltd
   license: "license (BSD, MIT)"
   min_ansible_version: 2.4
   platforms:
