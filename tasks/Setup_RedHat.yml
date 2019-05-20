@@ -46,7 +46,7 @@
       ignore_errors: true
 
     - name: install puppet repo
-      yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/{{puppet_version}}-release-el-7.noarch.rpm state=present
+       yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{puppet_version}}-release-{{puppet_rpmrepo_release}}.el7.noarch.rpm state=present 
       when: disable_puppet == false
 
   when: ansible_distribution_major_version == "7"
