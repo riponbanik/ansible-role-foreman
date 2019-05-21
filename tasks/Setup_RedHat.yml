@@ -12,7 +12,7 @@
 - name: Resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
-  command: /usr/local/bin/mungehosts -a "{{ansible_default_ipv4.address}} {{foreman_hostname}}"
+  command: /usr/local/bin/mungehosts -a "{{ ansible_default_ipv4.address }} {{ foreman_hostname }}"
   when: foreman_hostname is defined
 
 - name: Install epel release
@@ -46,8 +46,10 @@
       ignore_errors: true
 
     - name: install puppet repo
-      yum: name="https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{ puppet_version }}-release-{{ puppet_rpmrepo_release }}.el7.noarch.rpm" state=present 
-      when: disable_puppet == false
+      yum:
+        name:"https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{ puppet_version }}-release-{{ puppet_rpmrepo_release }}.el7.noarch.rpm"
+        state:present
+      when: not disable_puppet
 
   when: ansible_distribution_major_version == "7"
 
@@ -73,7 +75,7 @@
         --foreman-admin-username={{ foreman_admin_username }}
         --foreman-admin-password={{ foreman_admin_password }}
         --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
-        {{foreman_cmd_options | join (' ')}}
+        {{ foreman_cmd_options | join (' ') }}
   when: disable_puppet | bool
 
 - name: Install and Configure Foreman with Puppet
@@ -90,8 +92,8 @@
         --foreman-db-password={{ foreman_db_password }}
         --foreman-admin-username={{ foreman_admin_username }}
         --foreman-admin-password={{ foreman_admin_password }}
-        {{foreman_cmd_options | join (' ')}}
-  when: disable_puppet == false
+        {{ foreman_cmd_options | join (' ') }}
+  when: disable_puppet
 
 - name: Install and Configure PuppetDB
   block:
@@ -121,10 +123,16 @@
       puppet: timeout=30
 
     - name: Update Puppet classes in Foreman via API
-      command: 'curl -k -u "{{ foreman_admin_username }}":"{{ foreman_admin_password }}"  -H "Content-Type: application/json" -X POST https://{{ansible_fqdn}}/api/smart_proxies/1/import_puppetclasses'
+      command: >
+        'curl -k -u "{{ foreman_admin_username }}":"{{ foreman_admin_password }}"
+         -H "Content-Type: application/json"
+         -X POST https://{{ ansible_fqdn }}/api/smart_proxies/1/import_puppetclasses'
 
     - name: Assigne Puppetdb Class to Foreman
-      command: "curl -k -u '{{ foreman_admin_username }}':'{{ foreman_admin_password }}' -H 'Content-Type: application/json' -X POST -d '{\"puppetclass_id\": 34}' https://{{ansible_fqdn}}/api/hosts/1/puppetclass_ids"
+      command: >
+        "curl -k -u '{{ foreman_admin_username }}':'{{ foreman_admin_password }}'
+         -H 'Content-Type: application/json'
+         -X POST -d '{\"puppetclass_id\": 34}' https://{{ ansible_fqdn }}/api/hosts/1/puppetclass_ids"
       ignore_errors: True
 
     - name: Run of puppet agent (Installing Puppetdb in Foreman)
@@ -137,10 +145,10 @@
         --enable-foreman-plugin-puppetdb
         --puppet-server-storeconfigs-backend=puppetdb
         --puppet-server-reports=foreman,puppetdb
-        --puppet-server-foreman-url=https://{{ansible_fqdn}}
-        --foreman-plugin-puppetdb-address='https://{{ansible_fqdn}}:8081/pdb/cmd/v1'
-        --foreman-plugin-puppetdb-dashboard-address='http://{{ansible_fqdn}}:8080/pdb/dashboard'
+        --puppet-server-foreman-url=https://{{ ansible_fqdn }}
+        --foreman-plugin-puppetdb-address='https://{{ ansible_fqdn }}:8081/pdb/cmd/v1'
+        --foreman-plugin-puppetdb-dashboard-address='http://{{ ansible_fqdn }}:8080/pdb/dashboard'
 
     - name: Run of puppet agent (After Foreman connect to DB running agent to make sure that Postgresql DB has pg_hba rules for PuppetDB)
       puppet: timeout=600
-  when: (disable_puppet == false) and (enable_puppetdb == true)
+  when: (not disable_puppet) and (enable_puppetdb)
