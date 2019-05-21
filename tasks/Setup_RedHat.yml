@@ -39,14 +39,14 @@
 - name: Configure foreman for EL7
   block:
     - name: install foreman repo
-      yum: name=http://yum.theforeman.org/releases/{{foreman_version}}/el7/x86_64/foreman-release.rpm state=present
+      yum: name="http://yum.theforeman.org/releases/{{foreman_version}}/el7/x86_64/foreman-release.rpm" state=present
 
     - name: disable firewalld
       service: name=firewalld state=stopped enabled=no
       ignore_errors: true
 
     - name: install puppet repo
-       yum: name=https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{puppet_version}}-release-{{puppet_rpmrepo_release}}.el7.noarch.rpm state=present 
+       yum: name="https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{puppet_version}}-release-{{puppet_rpmrepo_release}}.el7.noarch.rpm" state=present 
       when: disable_puppet == false
 
   when: ansible_distribution_major_version == "7"
