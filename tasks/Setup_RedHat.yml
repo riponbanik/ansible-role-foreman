@@ -47,7 +47,7 @@
 
     - name: install puppet repo
       yum:
-        name:"https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{ puppet_version }}-release-{{ puppet_rpmrepo_release }}.el7.noarch.rpm"
+        name:"https://yum.puppetlabs.com/{{ puppet_version }}/el/7/x86_64/{{ puppet_version }}-release-{{ puppet_release }}.el7.noarch.rpm"
         state:present
       when: not disable_puppet
 

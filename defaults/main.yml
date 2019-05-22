@@ -15,7 +15,7 @@ foreman_db_password: dbpassword
 # Puppet config.
 disable_puppet: false
 puppet_version: puppet5
-puppet_rpmrepo_release: "5.0.0-6"
+puppet_release: "5.0.0-6"
 enable_puppetdb: false
 
 # Plugins/Capability.
