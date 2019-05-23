@@ -12,7 +12,7 @@
 - name: Resolve hostname via /etc/hosts to resolve `hostname -f`
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
-  command: /usr/local/bin/mungehosts -a "{{ansible_default_ipv4.address}} {{foreman_hostname}}"
+  command: /usr/local/bin/mungehosts -a "{{ ansible_default_ipv4.address }} {{ foreman_hostname }}"
   when: foreman_hostname is defined
 
 - name: Update CA Certificate
@@ -22,7 +22,7 @@
 
 - name: Install Puppet Repository
   apt:
-    deb: https://apt.puppetlabs.com/{{puppet_version}}-release-{{ansible_distribution_release}}.deb
+    deb: https://apt.puppetlabs.com/{{ puppet_version }}-release-{{ ansible_distribution_release }}.deb
 
 - name: Install Foreman Repository
   block:
@@ -32,12 +32,12 @@
         state: present
     - name: Install Foreman Repo
       apt_repository:
-        repo: deb http://deb.theforeman.org/ {{ansible_distribution_release}} {{foreman_version}}
+        repo: deb http://deb.theforeman.org/ {{ ansible_distribution_release }} {{ foreman_version }}
         state: present
         filename: /etc/apt/sources.list.d/foreman.list
     - name: Install Foreman Plugin Repo
       apt_repository:
-        repo: deb http://deb.theforeman.org/ plugins {{foreman_version}}
+        repo: deb http://deb.theforeman.org/ plugins {{ foreman_version }}
         state: present
         filename: /etc/apt/sources.list.d/foreman_plugins.list
 
@@ -63,7 +63,7 @@
         --foreman-admin-username={{ foreman_admin_username }}
         --foreman-admin-password={{ foreman_admin_password }}
         --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
-        {{foreman_cmd_options | join (' ')}}
+        {{ foreman_cmd_options | join (' ') }}
   when: disable_puppet | bool
 
 - name: Install and Configure Foreman with Puppet
@@ -80,7 +80,7 @@
         --foreman-db-password={{ foreman_db_password }}
         --foreman-admin-username={{ foreman_admin_username }}
         --foreman-admin-password={{ foreman_admin_password }}
-        {{foreman_cmd_options | join (' ')}}
-  when: disable_puppet == false
+        {{ foreman_cmd_options | join (' ') }}
+  when: not disable_puppet
 
 
