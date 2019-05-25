@@ -1,12 +1,11 @@
 ---
 # General config.
-foreman_version: 1.21
+foreman_version: "1.21"
 foreman_answer_file_path: '/etc/foreman-installer/scenarios.d/foreman-answers.yaml'
 foreman_cmd_options: []
 foreman_admin_username: admin
 foreman_admin_password: password
-#foreman_db_type: mysql
-foreman_db_type: postgresql
+foreman_db_type: mysql
 foreman_db_manage: True
 foreman_db_host: localhost
 foreman_db_database: foremandb
@@ -33,4 +32,3 @@ foreman_compute_options: {}
 puppet_options: {}
 puppet_server_options: {}
 
-  
