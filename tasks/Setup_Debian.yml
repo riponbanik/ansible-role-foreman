@@ -1,56 +1,59 @@
 ---
-- name: Set hostname as fqdn
+- name: "Set hostname as fqdn"
   hostname: name={{ foreman_hostname }}
   when: foreman_hostname is defined
 
-- name: Copy script to modify /etc/hosts
+- name: "Copy script to modify /etc/hosts"
   copy:
     src: mungehosts
     dest: /usr/local/bin/mungehosts
     mode: 0755
 
-- name: Resolve hostname via /etc/hosts to resolve `hostname -f`
+- name: "Resolve hostname via /etc/hosts to resolve `hostname -f`"
   #lineinfile: dest=/etc/hosts line="{{ansible_default_ipv4.address}} {{ansible_fqdn}} {{ansible_hostname}}"
   #command: python /tmp/modify_hosts.py "{{ansible_default_ipv4.address}}", "{{ansible_default_ipv4.address}} {{ansible_hostname}}"
   command: /usr/local/bin/mungehosts -a "{{ ansible_default_ipv4.address }} {{ foreman_hostname }}"
   when: foreman_hostname is defined
 
-- name: Update CA Certificate
+- name: "Update CA Certificates"
   apt:
     name: ca-certificates
     update_cache: yes
 
-- name: Install Puppet Repository
+- name: "Install Puppet Repository"
   apt:
     deb: https://apt.puppetlabs.com/{{ puppet_version }}-release-{{ ansible_distribution_release }}.deb
 
-- name: Install Foreman Repository
+- name: "Install Foreman Repository"
   block:
-    - name: Add Public Key
+    - name: "Add Public Key"
       apt_key:
         url: https://deb.theforeman.org/pubkey.gpg
         state: present
-    - name: Install Foreman Repo
+    - name: "Install Foreman Repo"
       apt_repository:
         repo: deb http://deb.theforeman.org/ {{ ansible_distribution_release }} {{ foreman_version }}
         state: present
         filename: /etc/apt/sources.list.d/foreman.list
-    - name: Install Foreman Plugin Repo
+    - name: "Install Foreman Plugin Repo"
       apt_repository:
         repo: deb http://deb.theforeman.org/ plugins {{ foreman_version }}
         state: present
         filename: /etc/apt/sources.list.d/foreman_plugins.list
 
-- name: Download foreman installer package
-  apt: name=foreman-installer force=yes update_cache=yes
+- name: "Download Foreman installer package"
+  apt: 
+    name: foreman-installer
+    force: yes
+    update_cache: yes
 
-- name: Install puppet agent
+- name: "Install Puppet Agent"
   apt: name=puppet-agent force=yes update_cache=yes
-  when: disable_puppet | bool
+  when: disable_puppet
 
-- name: Install and Configure foreman without puppet
+- name: Install and Configure Foreman without Puppet
   block:
-    - name: Install foreman without puppet
+    - name: "Install Foreman without Puppet"
       command: >
         foreman-installer
         --foreman-unattended=true
@@ -64,11 +67,11 @@
         --foreman-admin-password={{ foreman_admin_password }}
         --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
         {{ foreman_cmd_options | join (' ') }}
-  when: disable_puppet | bool
+  when: disable_puppet
 
-- name: Install and Configure Foreman with Puppet
+- name: "Install and Configure Foreman with Puppet"
   block:
-    - name: Install foreman with Puppet
+    - name: "Install Foreman with Puppet"
       command: >
         foreman-installer
         --foreman-unattended=true
@@ -82,5 +85,3 @@
         --foreman-admin-password={{ foreman_admin_password }}
         {{ foreman_cmd_options | join (' ') }}
   when: not disable_puppet
-
-
