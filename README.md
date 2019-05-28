@@ -24,9 +24,11 @@ By default, `all-in-one` Foreman installation includes a Puppet master, but this
 
 VM (on-perm or cloud) is needed to install. Tested with the following OS -
 
-   1. Redhat Enterprise Linux 7
-   2. CentOS 7    
-   3. Ubuntu 16.04 (Xenial)   
+   1. Redhat Enterprise Linux 7, CentOS 7
+   2. Ubuntu 16.04 (Xenial), 18.04 (Bionic)
+   3. Debian 9
+
+   Both, PostgreSQL and MySQL supported for all above except Debian. Debian supports PostgreSQL only.
 
 ## Example Playbook
 
@@ -117,3 +119,4 @@ Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 ## Author Information
 
 This role was created in 2018 by [Ripon Banik](https://www.linkedin.com/in/ripon-banik-79956b23/)
+Fixes and testing in 2019 by [Chris Scheible](https://www.linkedin.com/in/christian-scheible-devops/)
