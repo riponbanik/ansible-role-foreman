@@ -119,4 +119,4 @@ Documentation is avaiable from Foreman Website [https://www.theforeman.org/]
 ## Author Information
 
 This role was created in 2018 by [Ripon Banik](https://www.linkedin.com/in/ripon-banik-79956b23/). 
-Fixes and testing in 2019 by [Chris Scheible](https://www.linkedin.com/in/christian-scheible-devops/)
+Fixes and testing in 2019 by [Chris Scheible](https://www.linkedin.com/in/christian-scheible-devops/).
