@@ -55,7 +55,7 @@
       yum: 
         name: "puppet-agent"
         state: present
-      when: not disable_puppet
+      when: disable_puppet
 
   when: ansible_distribution_major_version == "7"
 

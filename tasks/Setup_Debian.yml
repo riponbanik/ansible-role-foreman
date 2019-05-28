@@ -65,7 +65,9 @@
         --foreman-db-password={{ foreman_db_password }}
         --foreman-admin-username={{ foreman_admin_username }}
         --foreman-admin-password={{ foreman_admin_password }}
-        --puppet-server=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false
+        --puppet-server=false 
+        --foreman-proxy-puppet=false 
+        --foreman-proxy-puppetca=false
         {{ foreman_cmd_options | join (' ') }}
   when: disable_puppet
 
