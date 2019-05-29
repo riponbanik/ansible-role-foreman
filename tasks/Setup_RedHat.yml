@@ -127,17 +127,30 @@
       puppet: timeout=30
 
     - name: "Update Puppet classes in Foreman via API"
-      command: >
-        curl -k -u "{{ foreman_admin_username }}":"{{ foreman_admin_password }}"
-         -H "Content-Type: application/json"
-         -X POST https://"{{ ansible_fqdn }}"/api/smart_proxies/1/import_puppetclasses
+      uri:
+        url: "https://{{ ansible_fqdn }}/api/smart_proxies/1/import_puppetclasses"
+        user: "{{ foreman_admin_username }}"
+        password: "{{ foreman_admin_password }}"
+        method: POST
+        force_basic_auth: yes
+        status_code: 200
+        body_format: json
+        validate_certs: no
 
     - name: "Assign Puppetdb Class to Foreman"
-      command: >
-        curl -k -u "{{ foreman_admin_username }}":"{{ foreman_admin_password }}"
-         -H 'Content-Type: application/json'
-         -X POST -d '{"puppetclass_id": 34}' https://"{{ ansible_fqdn }}"/api/hosts/1/puppetclass_ids
-      ignore_errors: True
+      uri:
+        url: "https://{{ ansible_fqdn }}/api/hosts/1/puppetclass_ids"
+        user: "{{ foreman_admin_username }}"
+        password: "{{ foreman_admin_password }}"
+        method: POST
+        #headers: 
+        #body: '{"puppetclass_id": 34}'
+        #    body: "{{ lookup('file','issue.json') }}"
+        body: >
+          {"puppetclass_id": 34}
+        force_basic_auth: yes
+        body_format: json
+        validate_certs: no
 
     - name: Run of puppet agent (Installing PuppetDB in Foreman)
       puppet: timeout=600
