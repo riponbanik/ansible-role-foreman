@@ -1,22 +1,25 @@
 ---
 # General config.
-foreman_version: 1.19
+foreman_version: "1.19"
 foreman_answer_file_path: '/etc/foreman-installer/scenarios.d/foreman-answers.yaml'
 foreman_cmd_options: []
 foreman_admin_username: admin
 foreman_admin_password: password
+# supported DB for foreman_db_type: mysql, postgresql.
 foreman_db_type: mysql
-foreman_db_manage: true
+foreman_db_manage: True
 foreman_db_host: localhost
 foreman_db_database: foremandb
 foreman_db_username: foreman
 foreman_db_password: dbpassword
 
 # Puppet config.
-disable_puppet: false
+disable_puppet: False
 puppet_version: puppet5
+# puppet_release used only in tasks/Setup_RedHat.yml.
 puppet_release: "5.0.0-6"
-enable_puppetdb: false
+# enable_puppetdb used only in tasks/Setup_RedHat.yml.
+enable_puppetdb: False
 
 # Plugins/Capability.
 foreman_plugins: []
@@ -31,5 +34,3 @@ foreman_proxy_plugin_options: {}
 foreman_compute_options: {}
 puppet_options: {}
 puppet_server_options: {}
-
-  
